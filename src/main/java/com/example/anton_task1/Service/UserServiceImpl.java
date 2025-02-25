@@ -10,70 +10,74 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class UserServiceImpl implements UserService {
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
+  private final UserRepository userRepository;
+  private final PasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
+  public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    this.userRepository = userRepository;
+    this.passwordEncoder = passwordEncoder;
+  }
+
+  @Override
+  public UserEntity createUser(UserDTO dao) {
+    UserEntity user = new UserEntity();
+    if (isUserExists(dao.getUsername()) || isUserExistsByEmail(dao.getEmail())) {
+      System.out.println("Существует!");
+      throw new UserExistsException("Пользователь с таким username существует!");
     }
 
+    user.setEmail(dao.getEmail());
+    user.setPhone(dao.getPhone());
+    user.setUsername(dao.getUsername());
 
-    @Override
-    public UserEntity createUser(UserDTO dao) {
-        UserEntity user = new UserEntity();
-        if (isUserExists(dao.getUsername()) || isUserExistsByEmail(dao.getEmail())){
-            System.out.println("Существует!");
-            throw new UserExistsException("Пользователь с таким username существует!");
-        }
+    String encodedPass = passwordEncoder.encode(dao.getPassword());
+    user.setPassword(encodedPass);
 
-        user.setEmail(dao.getEmail());
-        user.setPhone(dao.getPhone());
-        user.setUsername(dao.getUsername());
+    user.setAuthorities("ROLE_USER");
 
-        String encodedPass = passwordEncoder.encode(dao.getPassword());
-        user.setPassword(encodedPass);
+    userRepository.save(user);
 
-        user.setAuthorities("ROLE_USER");
+    return user;
+  }
 
-        userRepository.save(user);
+  @Override
+  public UserEntity findUserById(Long id) throws UserNotFoundException {
+    return userRepository
+        .findById(id)
+        .orElseThrow(() -> new UserNotFoundException("Пользователь с id" + id + " не найден!"));
+  }
 
-        return user;
-    }
+  @Override
+  public boolean isUserExists(String username) {
+    return userRepository.existsByUsername(username);
+  }
 
-    @Override
-    public UserEntity findUserById(Long id) throws UserNotFoundException {
-        return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("Пользователь с id" + id + " не найден!"));
-    }
+  @Override
+  public boolean isUserExistsByEmail(String email) {
+    return userRepository.existsByEmail(email);
+  }
 
-    @Override
-    public boolean isUserExists(String username) {
-        return userRepository.existsByUsername(username);
-    }
+  @Override
+  public UserEntity updateUser(UserDTO dao) throws UserNotFoundException {
+    UserEntity foundUser =
+        userRepository
+            .findById(dao.getId())
+            .orElseThrow(
+                () -> new UserNotFoundException("Пользователь с id" + dao.getId() + " не найден!"));
 
-    @Override
-    public boolean isUserExistsByEmail(String email) {
-        return userRepository.existsByEmail(email);
-    }
+    foundUser.setEmail(dao.getEmail());
+    foundUser.setPhone(dao.getPhone());
+    foundUser.setUsername(dao.getUsername());
 
-    @Override
-    public UserEntity updateUser(UserDTO dao) throws UserNotFoundException {
-        UserEntity foundUser = userRepository.findById(dao.getId())
-                .orElseThrow(() -> new UserNotFoundException("Пользователь с id" + dao.getId() + " не найден!"));
+    String encodedPassword = passwordEncoder.encode(dao.getPassword());
+    foundUser.setPassword(encodedPassword);
+    userRepository.save(foundUser);
 
-        foundUser.setEmail(dao.getEmail());
-        foundUser.setPhone(dao.getPhone());
-        foundUser.setUsername(dao.getUsername());
+    return foundUser;
+  }
 
-        String encodedPassword = passwordEncoder.encode(dao.getPassword());
-        foundUser.setPassword(encodedPassword);
-        userRepository.save(foundUser);
-
-        return foundUser;
-    }
-
-    @Override
-    public void deleteUser(Long id) {
-        userRepository.deleteById(id);
-    }
+  @Override
+  public void deleteUser(Long id) {
+    userRepository.deleteById(id);
+  }
 }
