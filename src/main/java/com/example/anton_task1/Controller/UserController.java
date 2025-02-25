@@ -2,6 +2,7 @@ package com.example.anton_task1.Controller;
 
 import com.example.anton_task1.DTO.UserDTO;
 import com.example.anton_task1.Entity.UserEntity;
+import com.example.anton_task1.Exception.UserExistsException;
 import com.example.anton_task1.Exception.UserNotFoundException;
 import com.example.anton_task1.Response.CreateResponse;
 import com.example.anton_task1.Response.DeleteResponse;
@@ -31,18 +32,31 @@ public class UserController {
     public ResponseEntity<CreateResponse> createUser(@RequestBody UserDTO user) {
         HttpHeaders headers = new HttpHeaders();
 
-        UserEntity createdUser = userService.createUser(user);
-
-        CreateResponse createResponse = new CreateResponse();
-        createResponse.setId(user.getId());
-        createResponse.setMessage("User created successfully");
-        createResponse.setUser(createdUser);
-
-        ResponseEntity<CreateResponse> response = new ResponseEntity<>(createResponse, headers, HttpStatus.CREATED);
+        try {
 
 
+            UserEntity createdUser = userService.createUser(user);
 
-        return response;
+            CreateResponse createResponse = new CreateResponse();
+            createResponse.setId(user.getId());
+            createResponse.setMessage("User created successfully");
+            createResponse.setUser(createdUser);
+
+            ResponseEntity<CreateResponse> response = new ResponseEntity<>(createResponse, headers, HttpStatus.CREATED);
+
+
+            return response;
+
+        }catch (UserExistsException e){
+            CreateResponse createResponse = new CreateResponse();
+            createResponse.setId(null);
+            createResponse.setMessage("User already exists");
+            createResponse.setUser(null);
+
+            ResponseEntity<CreateResponse> response = new ResponseEntity<>(createResponse, headers, HttpStatus.CONFLICT);
+
+            return response;
+        }
     }
 
     @GetMapping("/find/{id}")

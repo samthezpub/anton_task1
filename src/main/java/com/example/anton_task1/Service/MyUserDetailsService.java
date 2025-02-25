@@ -1,12 +1,11 @@
 package com.example.anton_task1.Service;
 
+import com.example.anton_task1.Config.MyUserPrincipal;
 import com.example.anton_task1.Entity.UserEntity;
 import com.example.anton_task1.Repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service

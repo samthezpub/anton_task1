@@ -2,6 +2,7 @@ package com.example.anton_task1.Service;
 
 import com.example.anton_task1.DTO.UserDTO;
 import com.example.anton_task1.Entity.UserEntity;
+import com.example.anton_task1.Exception.UserExistsException;
 import com.example.anton_task1.Exception.UserNotFoundException;
 import com.example.anton_task1.Repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,6 +22,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserEntity createUser(UserDTO dao) {
         UserEntity user = new UserEntity();
+        if (isUserExists(dao.getUsername()) || isUserExistsByEmail(dao.getEmail())){
+            System.out.println("Существует!");
+            throw new UserExistsException("Пользователь с таким username существует!");
+        }
+
         user.setEmail(dao.getEmail());
         user.setPhone(dao.getPhone());
         user.setUsername(dao.getUsername());
@@ -38,6 +44,16 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserEntity findUserById(Long id) throws UserNotFoundException {
         return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("Пользователь с id" + id + " не найден!"));
+    }
+
+    @Override
+    public boolean isUserExists(String username) {
+        return userRepository.existsByUsername(username);
+    }
+
+    @Override
+    public boolean isUserExistsByEmail(String email) {
+        return userRepository.existsByEmail(email);
     }
 
     @Override
