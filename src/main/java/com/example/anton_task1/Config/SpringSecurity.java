@@ -4,6 +4,7 @@ import com.example.anton_task1.Repository.UserRepository;
 import com.example.anton_task1.Service.MyUserDetailsService;
 import com.example.anton_task1.Service.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -17,6 +18,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -24,6 +26,9 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SpringSecurity {
 
     private final MyUserDetailsService myUserDetailsService;
+    @Autowired
+    @Qualifier("customAuthenticationEntryPoint")
+    AuthenticationEntryPoint authEntryPoint;
 
     public SpringSecurity(MyUserDetailsService myUserDetailsService) {
         this.myUserDetailsService = myUserDetailsService;
@@ -52,7 +57,10 @@ public class SpringSecurity {
                         .requestMatchers("/users/create").permitAll()
                 )
                 .httpBasic(Customizer.withDefaults())
-                .authenticationProvider(authenticationProvider());
+                .authenticationProvider(authenticationProvider())
+                .httpBasic(basic -> basic.authenticationEntryPoint(authEntryPoint))
+                .exceptionHandling(Customizer.withDefaults());
+        ;
         return http.build();
     }
 }
