@@ -1,6 +1,6 @@
 package com.example.anton_task1.Response;
 
-import com.example.anton_task1.Entity.UserEntity;
+import com.example.anton_task1.DTO.UserDTO;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,5 +11,5 @@ import lombok.Setter;
 public class UpdateResponse {
   private Long id;
   private String message;
-  private UserEntity user;
+  private UserDTO user;
 }

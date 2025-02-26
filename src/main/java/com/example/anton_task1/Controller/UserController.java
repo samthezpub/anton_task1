@@ -52,12 +52,12 @@ public class UserController {
       throws UserNotFoundException {
     HttpHeaders headers = new HttpHeaders();
 
-    UserEntity userEntity = userService.findUserById(id);
+    UserDTO userDTO = userService.findUserById(id);
 
     FindResponse findResponse = new FindResponse();
     findResponse.setId(id);
     findResponse.setMessage("Success founded user");
-    findResponse.setUser(userEntity);
+    findResponse.setUser(userDTO);
 
     ResponseEntity<FindResponse> response =
         new ResponseEntity<>(findResponse, headers, HttpStatus.OK);
@@ -70,12 +70,12 @@ public class UserController {
       throws UserNotFoundException {
     HttpHeaders headers = new HttpHeaders();
 
-    UserEntity userEntity = userService.updateUser(user);
+    UserDTO userDTO = userService.updateUser(user);
 
     UpdateResponse updateResponse = new UpdateResponse();
-    updateResponse.setId(userEntity.getId());
+    updateResponse.setId(userDTO.getId());
     updateResponse.setMessage("User updated successfully");
-    updateResponse.setUser(userEntity);
+    updateResponse.setUser(userDTO);
 
     ResponseEntity<UpdateResponse> response =
         new ResponseEntity<UpdateResponse>(updateResponse, headers, HttpStatus.OK);
