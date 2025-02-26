@@ -21,10 +21,6 @@ public class SpringSecurity {
 
   private final MyUserDetailsService myUserDetailsService;
 
-  @Autowired
-  @Qualifier("customAuthenticationEntryPoint")
-  AuthenticationEntryPoint authEntryPoint;
-
   public SpringSecurity(MyUserDetailsService myUserDetailsService) {
     this.myUserDetailsService = myUserDetailsService;
   }
@@ -47,17 +43,14 @@ public class SpringSecurity {
     http.csrf(crsf -> crsf.disable())
         .authorizeHttpRequests(
             auth ->
-                auth.requestMatchers("/users/delete/*", "/users/update", "/users/find/*")
+                auth.requestMatchers("/users/delete/*", "/users/update", "/users/find/**")
                     .hasAnyRole("ADMIN")
                     .requestMatchers("/users/hello")
                     .hasAnyRole("USER", "ADMIN")
-                    .requestMatchers("/users/create")
+                    .requestMatchers("/users/create", "/error")
                     .permitAll())
         .httpBasic(Customizer.withDefaults())
-        .authenticationProvider(authenticationProvider())
-        .httpBasic(basic -> basic.authenticationEntryPoint(authEntryPoint))
-        .exceptionHandling(Customizer.withDefaults());
-    ;
+        .authenticationProvider(authenticationProvider());
     return http.build();
   }
 }

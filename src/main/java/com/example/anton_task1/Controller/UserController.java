@@ -9,6 +9,8 @@ import com.example.anton_task1.Response.DeleteResponse;
 import com.example.anton_task1.Response.FindResponse;
 import com.example.anton_task1.Response.UpdateResponse;
 import com.example.anton_task1.Service.UserServiceImpl;
+import lombok.SneakyThrows;
+import org.apache.coyote.Response;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,90 +31,56 @@ public class UserController {
   }
 
   @PostMapping("/create")
-  public ResponseEntity<CreateResponse> createUser(@RequestBody UserDTO user) {
+  public ResponseEntity<CreateResponse> createUser(@RequestBody UserDTO user)
+      throws UserExistsException {
     HttpHeaders headers = new HttpHeaders();
+    CreateResponse createResponse = new CreateResponse();
 
-    try {
+    UserDTO createdUser = userService.createUser(user);
+    createResponse.setId(createdUser.getId());
+    createResponse.setMessage("Успешно создан!");
+    createResponse.setUser(createdUser);
 
-      UserEntity createdUser = userService.createUser(user);
+    ResponseEntity<CreateResponse> response =
+        new ResponseEntity<>(createResponse, headers, HttpStatus.CREATED);
 
-      CreateResponse createResponse = new CreateResponse();
-      createResponse.setId(user.getId());
-      createResponse.setMessage("User created successfully");
-      createResponse.setUser(createdUser);
-
-      ResponseEntity<CreateResponse> response =
-          new ResponseEntity<>(createResponse, headers, HttpStatus.CREATED);
-
-      return response;
-
-    } catch (UserExistsException e) {
-      CreateResponse createResponse = new CreateResponse();
-      createResponse.setId(null);
-      createResponse.setMessage("User already exists");
-      createResponse.setUser(null);
-
-      ResponseEntity<CreateResponse> response =
-          new ResponseEntity<>(createResponse, headers, HttpStatus.CONFLICT);
-
-      return response;
-    }
+    return response;
   }
 
   @GetMapping("/find/{id}")
-  public ResponseEntity<FindResponse> getUserById(@PathVariable Long id) {
+  public ResponseEntity<FindResponse> getUserById(@PathVariable Long id)
+      throws UserNotFoundException {
     HttpHeaders headers = new HttpHeaders();
-    try {
-      UserEntity userEntity = userService.findUserById(id);
 
-      FindResponse findResponse = new FindResponse();
-      findResponse.setId(id);
-      findResponse.setMessage("Success founded user");
-      findResponse.setUser(userEntity);
+    UserEntity userEntity = userService.findUserById(id);
 
-      ResponseEntity<FindResponse> response =
-          new ResponseEntity<>(findResponse, headers, HttpStatus.OK);
+    FindResponse findResponse = new FindResponse();
+    findResponse.setId(id);
+    findResponse.setMessage("Success founded user");
+    findResponse.setUser(userEntity);
 
-      return response;
-    } catch (UserNotFoundException e) {
-      FindResponse findResponse = new FindResponse();
-      findResponse.setId(id);
-      findResponse.setMessage("Success founded user");
-      findResponse.setUser(null);
+    ResponseEntity<FindResponse> response =
+        new ResponseEntity<>(findResponse, headers, HttpStatus.OK);
 
-      ResponseEntity<FindResponse> response =
-          new ResponseEntity<>(findResponse, headers, HttpStatus.NOT_FOUND);
-
-      return response;
-    }
+    return response;
   }
 
   @PostMapping("/update")
-  public ResponseEntity<UpdateResponse> updateUser(@RequestBody UserDTO user) {
+  public ResponseEntity<UpdateResponse> updateUser(@RequestBody UserDTO user)
+      throws UserNotFoundException {
     HttpHeaders headers = new HttpHeaders();
 
-    try {
-      UserEntity userEntity = userService.updateUser(user);
+    UserEntity userEntity = userService.updateUser(user);
 
-      UpdateResponse updateResponse = new UpdateResponse();
-      updateResponse.setId(userEntity.getId());
-      updateResponse.setMessage("User updated successfully");
-      updateResponse.setUser(userEntity);
+    UpdateResponse updateResponse = new UpdateResponse();
+    updateResponse.setId(userEntity.getId());
+    updateResponse.setMessage("User updated successfully");
+    updateResponse.setUser(userEntity);
 
-      ResponseEntity<UpdateResponse> response =
-          new ResponseEntity<UpdateResponse>(updateResponse, headers, HttpStatus.OK);
+    ResponseEntity<UpdateResponse> response =
+        new ResponseEntity<UpdateResponse>(updateResponse, headers, HttpStatus.OK);
 
-      return response;
-    } catch (UserNotFoundException e) {
-      UpdateResponse updateResponse = new UpdateResponse();
-      updateResponse.setId(user.getId());
-      updateResponse.setMessage("User not updated");
-
-      ResponseEntity<UpdateResponse> response =
-          new ResponseEntity<UpdateResponse>(updateResponse, headers, HttpStatus.BAD_REQUEST);
-
-      return response;
-    }
+    return response;
   }
 
   @DeleteMapping("/delete/{id}")
@@ -128,6 +96,20 @@ public class UserController {
     ResponseEntity<DeleteResponse> response =
         new ResponseEntity<>(deleteResponse, headers, HttpStatus.OK);
 
+    return response;
+  }
+
+  @ExceptionHandler(UserExistsException.class)
+  public ResponseEntity<?> handleException(UserExistsException e) {
+    HttpHeaders headers = new HttpHeaders();
+    ResponseEntity<?> response = new ResponseEntity<>(e, headers, e.getCode());
+    return response;
+  }
+
+  @ExceptionHandler(UserNotFoundException.class)
+  public ResponseEntity<?> handleException(UserNotFoundException e) {
+    HttpHeaders headers = new HttpHeaders();
+    ResponseEntity<?> response = new ResponseEntity<>(e, headers, e.getCode());
     return response;
   }
 }
