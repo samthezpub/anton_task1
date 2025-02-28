@@ -1,16 +1,15 @@
 package com.example.anton_task1.Controller;
 
 import com.example.anton_task1.DTO.UserDTO;
-import com.example.anton_task1.Entity.UserEntity;
 import com.example.anton_task1.Exception.UserExistsException;
 import com.example.anton_task1.Exception.UserNotFoundException;
-import com.example.anton_task1.Response.CreateResponse;
-import com.example.anton_task1.Response.DeleteResponse;
-import com.example.anton_task1.Response.FindResponse;
-import com.example.anton_task1.Response.UpdateResponse;
+import com.example.anton_task1.Request.CreateCarForUserRequest;
+import com.example.anton_task1.Request.CreateDogForUserRequest;
+import com.example.anton_task1.Response.UserController.CreateResponse;
+import com.example.anton_task1.Response.UserController.DeleteResponse;
+import com.example.anton_task1.Response.UserController.FindResponse;
+import com.example.anton_task1.Response.UserController.UpdateResponse;
 import com.example.anton_task1.Service.UserServiceImpl;
-import lombok.SneakyThrows;
-import org.apache.coyote.Response;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -83,6 +82,36 @@ public class UserController {
     return response;
   }
 
+  @PostMapping("/createCar")
+  public ResponseEntity<UpdateResponse> createCarForUser(@RequestBody CreateCarForUserRequest request) throws UserNotFoundException {
+    HttpHeaders headers = new HttpHeaders();
+
+    UserDTO updatedDTO = userService.createCarForUser(request);
+
+    UpdateResponse updateResponse = new UpdateResponse();
+    updateResponse.setId(updatedDTO.getId());
+    updateResponse.setMessage("Car created successfully");
+    updateResponse.setUser(updatedDTO);
+
+    ResponseEntity<UpdateResponse> response = new ResponseEntity<>(updateResponse, headers, HttpStatus.OK);
+    return response;
+  }
+
+  @PostMapping("/createDog")
+  public ResponseEntity<UpdateResponse> createDogForUser(@RequestBody CreateDogForUserRequest request) throws UserNotFoundException {
+    HttpHeaders headers = new HttpHeaders();
+
+    UserDTO updatedDTO = userService.createDogForUser(request);
+
+    UpdateResponse updateResponse = new UpdateResponse();
+    updateResponse.setId(updatedDTO.getId());
+    updateResponse.setMessage("Dog created successfully");
+    updateResponse.setUser(updatedDTO);
+
+    ResponseEntity<UpdateResponse> response = new ResponseEntity<>(updateResponse, headers, HttpStatus.OK);
+    return response;
+  }
+
   @DeleteMapping("/delete/{id}")
   public ResponseEntity<DeleteResponse> deleteUserById(@PathVariable Long id) {
     userService.deleteUser(id);
@@ -92,6 +121,22 @@ public class UserController {
     deleteResponse.setMessage("User is deleted");
 
     HttpHeaders headers = new HttpHeaders();
+
+    ResponseEntity<DeleteResponse> response =
+        new ResponseEntity<>(deleteResponse, headers, HttpStatus.OK);
+
+    return response;
+  }
+
+  @DeleteMapping("/deleteAll")
+  public ResponseEntity<DeleteResponse> deleteAllUser() {
+    HttpHeaders headers = new HttpHeaders();
+
+    userService.deleteAllUsers();
+
+    DeleteResponse deleteResponse = new DeleteResponse();
+    deleteResponse.setDeleted_id(0L);
+    deleteResponse.setMessage("All Users is deleted");
 
     ResponseEntity<DeleteResponse> response =
         new ResponseEntity<>(deleteResponse, headers, HttpStatus.OK);

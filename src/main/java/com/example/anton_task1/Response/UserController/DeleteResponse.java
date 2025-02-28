@@ -1,4 +1,4 @@
-package com.example.anton_task1.Response;
+package com.example.anton_task1.Response.UserController;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

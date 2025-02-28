@@ -1,10 +1,10 @@
 package com.example.anton_task1.Entity;
 
 import jakarta.persistence.*;
+import java.util.Arrays;
+import java.util.List;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.Arrays;
 
 @Data
 @NoArgsConstructor
@@ -23,16 +23,50 @@ public class UserEntity {
   private String email;
   private String phone;
 
+  /* Предположим человек удаляется, но собака же никуда не денется, она может найти другого хозяина, по этому каскадное удаление недопустимо */
+  @OneToOne(
+      cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH},
+      fetch = FetchType.EAGER,
+      orphanRemoval = false)
+  private DogEntity dog;
+
+  @OneToMany(
+      cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH},
+      fetch = FetchType.LAZY,
+      orphanRemoval = false)
+  private List<CarEntity> cars;
+
+  @ManyToMany(
+      cascade = {CascadeType.PERSIST, CascadeType.MERGE},
+      fetch = FetchType.LAZY)
+  @JoinTable(
+      name = "users_projects",
+      joinColumns = @JoinColumn(name = "user_id"),
+      inverseJoinColumns = @JoinColumn(name = "project_id"))
+  private List<ProjectEntity> projects;
 
   @Override
   public String toString() {
-    return "UserEntity{" +
-            "id=" + id +
-            ", username='" + username + '\'' +
-            ", password='" + Arrays.stream(password.split("")).map(s -> s = "*") + '\'' +
-            ", authorities='" + authorities + '\'' +
-            ", email='" + email + '\'' +
-            ", phone='" + phone + '\'' +
-            '}';
+    return "UserEntity{"
+        + "id="
+        + id
+        + ", username='"
+        + username
+        + '\''
+        + ", password='"
+        + Arrays.stream(password.split("")).map(s -> s = "*")
+        + '\''
+        + ", authorities='"
+        + authorities
+        + '\''
+        + ", email='"
+        + email
+        + '\''
+        + ", phone='"
+        + phone
+        + '\''
+        + ", dog="
+        + dog
+        + '}';
   }
 }

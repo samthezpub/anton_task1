@@ -1,5 +1,6 @@
 package com.example.anton_task1.DTO;
 
+import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,4 +14,7 @@ public class UserDTO {
 
   private String email;
   private String phone;
+
+  private DogDTO dog;
+  private List<CarDTO> cars;
 }

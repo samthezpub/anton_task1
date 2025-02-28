@@ -1,8 +1,6 @@
 package com.example.anton_task1.Config;
 
 import com.example.anton_task1.Service.MyUserDetailsService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -12,7 +10,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -43,9 +40,20 @@ public class SpringSecurity {
     http.csrf(crsf -> crsf.disable())
         .authorizeHttpRequests(
             auth ->
-                auth.requestMatchers("/users/delete/*", "/users/update", "/users/find/**")
+                auth.requestMatchers(
+                        "/users/delete/*",
+                        "/users/update",
+                        "/users/find/*",
+                        "/users/deleteAll",
+                        "/dogs/find/*")
                     .hasAnyRole("ADMIN")
-                    .requestMatchers("/users/hello")
+                    .requestMatchers(
+                        "/users/hello",
+                        "/users/createCar",
+                        "/users/createDog",
+                        "/dogs/create",
+                        "/dogs/update",
+                        "/dogs/delete/*")
                     .hasAnyRole("USER", "ADMIN")
                     .requestMatchers("/users/create", "/error")
                     .permitAll())

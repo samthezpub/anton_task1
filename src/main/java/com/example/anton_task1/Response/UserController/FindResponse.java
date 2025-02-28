@@ -1,4 +1,4 @@
-package com.example.anton_task1.Response;
+package com.example.anton_task1.Response.UserController;
 
 import com.example.anton_task1.DTO.UserDTO;
 import lombok.Getter;

@@ -1,0 +1,24 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+
+    <changeSet id="1740732059900-1" author="Владимир Миргородский">
+        <createTable tableName="users_projects">
+            <column name="user_id" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk25rj2pua9rt4vq3erf471y4ld"/>
+            </column>
+            <column name="project_id" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk25rj2pua9rt4vq3erf471y4l1"/>
+            </column>
+        </createTable>
+
+
+        <addForeignKeyConstraint baseColumnNames="project_id"
+                                 baseTableName="users_projects"
+                                 constraintName="fk25rj2pua9rt4vq3erf471y4l1"
+                                 onDelete="NO ACTION"
+                                 referencedColumnNames="id"
+                                 referencedTableName="project_entity"/>
+    </changeSet>
+</databaseChangeLog>

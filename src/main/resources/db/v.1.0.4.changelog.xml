@@ -1,0 +1,56 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+
+
+    <changeSet id="1740675271483-1" author="Владимир Миргородский">
+        <createTable tableName="users">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="username" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="password" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="authorities" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="email" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="phone" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="dog_id" type="bigint">
+                <constraints nullable="true"/>
+            </column>
+
+
+        </createTable>
+        <addForeignKeyConstraint baseColumnNames="dog_id"
+                                 baseTableName="users"
+                                 constraintName="fk8bh1un7d081owj6ne1rkyeiie"
+                                 onDelete="NO ACTION"
+                                 referencedColumnNames="id"
+                                 referencedTableName="dog_entity"/>
+
+        <addForeignKeyConstraint baseColumnNames="cars_id"
+                                 baseTableName="users_cars"
+                                 constraintName="fk25rj2pua9rt4vq3erf471y4l0"
+                                 onDelete="NO ACTION"
+                                 referencedColumnNames="id"
+                                 referencedTableName="car_entity"/>
+    </changeSet>
+</databaseChangeLog>

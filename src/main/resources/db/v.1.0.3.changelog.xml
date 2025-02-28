@@ -1,0 +1,58 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+
+
+    <changeSet id="1740675271483-1" author="Владимир Миргородский">
+        <createSequence cacheSize="371717"
+                        catalogName="car_entity_seq"
+                        cycle="false"
+                        dataType="bigint"
+                        incrementBy="50"
+                        maxValue="9999999"
+                        minValue="10"
+                        schemaName="public"
+                        sequenceName="car_entity_seq"
+                        startValue="50"/>
+
+        <createSequence cacheSize="371717"
+                        catalogName="dog_entity_seq"
+                        cycle="false"
+                        dataType="bigint"
+                        incrementBy="50"
+                        maxValue="9999999"
+                        minValue="10"
+                        schemaName="public"
+                        sequenceName="dog_entity_seq"
+                        startValue="50"/>
+
+        <createSequence cacheSize="371717"
+                        catalogName="users_seq"
+                        cycle="false"
+                        dataType="bigint"
+                        incrementBy="50"
+                        maxValue="9999999"
+                        minValue="10"
+                        schemaName="public"
+                        sequenceName="users_seq"
+                        startValue="50"/>
+
+        <createSequence cacheSize="371717"
+                        catalogName="project_entity_seq"
+                        cycle="false"
+                        dataType="bigint"
+                        incrementBy="50"
+                        maxValue="9999999"
+                        minValue="10"
+                        schemaName="public"
+                        sequenceName="project_entity_seq"
+                        startValue="50"/>
+    </changeSet>
+</databaseChangeLog>
