@@ -11,7 +11,7 @@
 
 
     <changeSet id="1740675271483-1" author="Владимир Миргородский">
-        <createSequence cacheSize="371717"
+        <createSequence cacheSize="5"
                         catalogName="car_entity_seq"
                         cycle="false"
                         dataType="bigint"
@@ -22,7 +22,7 @@
                         sequenceName="car_entity_seq"
                         startValue="50"/>
 
-        <createSequence cacheSize="371717"
+        <createSequence cacheSize="5"
                         catalogName="dog_entity_seq"
                         cycle="false"
                         dataType="bigint"
@@ -33,7 +33,7 @@
                         sequenceName="dog_entity_seq"
                         startValue="50"/>
 
-        <createSequence cacheSize="371717"
+        <createSequence cacheSize="5"
                         catalogName="users_seq"
                         cycle="false"
                         dataType="bigint"
@@ -44,7 +44,7 @@
                         sequenceName="users_seq"
                         startValue="50"/>
 
-        <createSequence cacheSize="371717"
+        <createSequence cacheSize="5"
                         catalogName="project_entity_seq"
                         cycle="false"
                         dataType="bigint"
