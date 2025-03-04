@@ -9,12 +9,14 @@ import com.example.anton_task1.Request.DeleteUserFromCourseRequest;
 import com.example.anton_task1.Response.CourseController.*;
 import com.example.anton_task1.Service.CourseServiceImpl;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/course")
@@ -67,6 +69,7 @@ public class CourseControllerImpl implements CourseController {
   public ResponseEntity<?> handleCourseNotFoundException(CourseNotFound e) {
     HttpHeaders headers = new HttpHeaders();
     ResponseEntity<?> response = new ResponseEntity<>(e, headers, e.getCode());
+    log.warn(e.getMessage());
     return response;
   }
 
@@ -74,6 +77,7 @@ public class CourseControllerImpl implements CourseController {
   public ResponseEntity<?> handleUserNotFoundException(UserNotFoundException e) {
     HttpHeaders headers = new HttpHeaders();
     ResponseEntity<?> response = new ResponseEntity<>(e, headers, e.getCode());
+    log.warn(e.getMessage());
     return response;
   }
 }

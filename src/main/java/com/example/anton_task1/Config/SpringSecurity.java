@@ -76,7 +76,12 @@ public class SpringSecurity {
                         "/course/create",
                         "/course/findByUser/*",
                         "/course",
-                        "/course/*")
+                        "/course/*",
+                        "/project/create",
+                        "/project/update",
+                        "/project/deleteProject",
+                        "/project/find/*",
+                        "/project/delete/*")
                     .hasAnyRole("USER", "ADMIN")
                     .requestMatchers("/auth/register", "/auth/login", "/error")
                     .permitAll()

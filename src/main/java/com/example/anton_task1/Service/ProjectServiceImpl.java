@@ -1,7 +1,6 @@
 package com.example.anton_task1.Service;
 
 import com.example.anton_task1.DTO.ProjectDTO;
-import com.example.anton_task1.DTO.UserDTO;
 import com.example.anton_task1.Entity.ProjectEntity;
 import com.example.anton_task1.Entity.UserEntity;
 import com.example.anton_task1.Exception.ProjectNotFoundException;
@@ -10,6 +9,11 @@ import com.example.anton_task1.Mapper.ProjectMapper;
 import com.example.anton_task1.Mapper.UserMapper;
 import com.example.anton_task1.Repository.ProjectRepository;
 import com.example.anton_task1.Repository.UserRepository;
+import com.example.anton_task1.Request.AddOrRemoveUserFromProjectRequest;
+import com.example.anton_task1.Response.ProjectController.CreateProjectResponse;
+import com.example.anton_task1.Response.ProjectController.DeleteProjectResponce;
+import com.example.anton_task1.Response.ProjectController.FindProjectByIdResponse;
+import com.example.anton_task1.Response.ProjectController.UpdateProjectResponse;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -31,85 +35,91 @@ public class ProjectServiceImpl implements ProjectService {
   }
 
   @Override
-  public ProjectDTO createProject(ProjectDTO projectDTO) {
-    ProjectEntity projectEntity = projectMapper.toEntity(projectDTO);
+  public CreateProjectResponse createProject(ProjectDTO projectDTO) {
+    ProjectEntity entity = projectRepository.save(projectMapper.toEntity(projectDTO));
 
-    ProjectEntity createdEntity = projectRepository.save(projectEntity);
-    ProjectDTO dto = projectMapper.toDTO(createdEntity);
-
-    return dto;
+    return CreateProjectResponse.builder()
+        .message("Project successfully created")
+        .project(projectMapper.toDTO(entity))
+        .build();
   }
 
   @Override
-  public ProjectDTO findProjectById(Long id) throws ProjectNotFoundException {
+  public FindProjectByIdResponse findProjectById(Long id) throws ProjectNotFoundException {
     ProjectDTO foundDto =
         projectMapper.toDTO(
             projectRepository
                 .findById(id)
                 .orElseThrow(() -> new ProjectNotFoundException("Project Not Found", id)));
 
-    return foundDto;
+    return FindProjectByIdResponse.builder()
+        .message("Project successfully found")
+        .project(foundDto)
+        .build();
   }
 
   @Override
-  public ProjectDTO updateProject(ProjectDTO projectDTO) throws ProjectNotFoundException {
+  public UpdateProjectResponse updateProject(ProjectDTO projectDTO)
+      throws ProjectNotFoundException {
 
     ProjectEntity projectEntity =
         projectRepository
             .findById(projectDTO.getId())
             .orElseThrow(
                 () -> new ProjectNotFoundException("Project Not Found", projectDTO.getId()));
+    projectEntity = projectMapper.toEntity(projectDTO);
+    projectRepository.save(projectEntity);
 
-    ProjectEntity entity = projectMapper.toEntity(projectDTO);
-
-    projectEntity = entity;
-
-    ProjectEntity updatedEntity = projectRepository.save(projectEntity);
-    ProjectDTO updatedDto = projectMapper.toDTO(updatedEntity);
-
-    return updatedDto;
+    return UpdateProjectResponse.builder().project(projectMapper.toDTO(projectEntity)).message("Project successfully updated").build();
   }
 
   @Override
-  public UserDTO addUserToProject(Long projectId, Long userId)
+  public UpdateProjectResponse addUserToProject(AddOrRemoveUserFromProjectRequest request)
       throws UserNotFoundException, ProjectNotFoundException {
     UserEntity userEntity =
         userRepository
-            .findById(userId)
-            .orElseThrow(() -> new UserNotFoundException("User Not Found", userId));
+            .findById(request.getUserId())
+            .orElseThrow(() -> new UserNotFoundException("User Not Found", request.getUserId()));
     ProjectEntity projectEntity =
         projectRepository
-            .findById(projectId)
-            .orElseThrow(() -> new ProjectNotFoundException("Project Not Found", projectId));
+            .findById(request.getProjectId())
+            .orElseThrow(
+                () -> new ProjectNotFoundException("Project Not Found", request.getProjectId()));
 
     userEntity.getProjects().add(projectEntity);
-    UserEntity updatedUser = userRepository.save(userEntity);
-    UserDTO dto = userMapper.toDTO(updatedUser);
+    userRepository.save(userEntity);
 
-    return dto;
+    return UpdateProjectResponse.builder()
+        .message("User successfully added to project")
+        .project(projectMapper.toDTO(projectEntity))
+        .build();
   }
 
   @Override
-  public UserDTO removeUserFromProject(Long projectId, Long userId)
+  public UpdateProjectResponse removeUserFromProject(AddOrRemoveUserFromProjectRequest request)
       throws UserNotFoundException, ProjectNotFoundException {
     UserEntity userEntity =
         userRepository
-            .findById(userId)
-            .orElseThrow(() -> new UserNotFoundException("User Not Found", userId));
+            .findById(request.getUserId())
+            .orElseThrow(() -> new UserNotFoundException("User Not Found", request.getUserId()));
     ProjectEntity projectEntity =
         projectRepository
-            .findById(projectId)
-            .orElseThrow(() -> new ProjectNotFoundException("Project Not Found", projectId));
+            .findById(request.getProjectId())
+            .orElseThrow(
+                () -> new ProjectNotFoundException("Project Not Found", request.getProjectId()));
 
     userEntity.getProjects().remove(projectEntity);
-    UserEntity updatedUser = userRepository.save(userEntity);
-    UserDTO dto = userMapper.toDTO(updatedUser);
+    userRepository.save(userEntity);
 
-    return dto;
+    return UpdateProjectResponse.builder()
+        .message("User successfully added to project")
+        .project(projectMapper.toDTO(projectEntity))
+        .build();
   }
 
   @Override
-  public void deleteProject(Long id) {
+  public DeleteProjectResponce deleteProject(Long id) {
     projectRepository.deleteById(id);
+    return DeleteProjectResponce.builder().id(id).message("Project successfully deleted").build();
   }
 }
