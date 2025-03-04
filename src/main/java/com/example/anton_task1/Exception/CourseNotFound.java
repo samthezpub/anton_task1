@@ -6,8 +6,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class CourseNotFound extends Exception {
-  private final Integer code = 404;
   private Long id;
+  private final Integer code = 404;
 
   public CourseNotFound(String message) {
     super(message);

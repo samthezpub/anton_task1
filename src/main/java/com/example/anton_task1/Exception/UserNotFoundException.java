@@ -6,8 +6,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class UserNotFoundException extends Exception {
-  private final Integer code = 404;
   private Long userId;
+  private final Integer code = 404;
 
   public UserNotFoundException(String message) {
     super(message);

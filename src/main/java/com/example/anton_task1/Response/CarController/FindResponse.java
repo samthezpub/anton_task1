@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class FindResponse {
-    private Long id;
-    private String message;
-    private CarDTO car;
+  private Long id;
+  private CarDTO car;
+  private String message;
 }

@@ -6,6 +6,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class AddOrRemoveUserFromProjectRequest {
-    private Long projectId;
-    private Long userId;
+  private Long userId;
+  private Long projectId;
 }

@@ -7,6 +7,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class CreateDogForUserRequest {
-    private Long userId;
-    private DogDTO dogDTO;
+  private Long userId;
+  private DogDTO dogDTO;
 }

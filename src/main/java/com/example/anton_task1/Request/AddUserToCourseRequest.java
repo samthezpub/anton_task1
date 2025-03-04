@@ -6,6 +6,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class AddUserToCourseRequest {
-    private Long courseId;
-    private Long userId;
+  private Long userId;
+  private Long courseId;
 }

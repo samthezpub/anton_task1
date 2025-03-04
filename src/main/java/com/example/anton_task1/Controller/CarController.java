@@ -73,7 +73,8 @@ public class CarController {
   }
 
   @DeleteMapping("/delete/{id}")
-  public ResponseEntity<DeleteResponse> deleteCar(@PathVariable("id") Long id) throws UserNotFoundException, CarNotFoundException {
+  public ResponseEntity<DeleteResponse> deleteCar(@PathVariable("id") Long id)
+      throws UserNotFoundException, CarNotFoundException {
     HttpHeaders headers = new HttpHeaders();
 
     carService.deleteCar(id);

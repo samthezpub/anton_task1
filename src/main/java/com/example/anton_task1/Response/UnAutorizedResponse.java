@@ -8,6 +8,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class UnAutorizedResponse {
-  private String message;
   private int code;
+  private String message;
 }

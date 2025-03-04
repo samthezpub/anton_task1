@@ -8,6 +8,6 @@ import lombok.Setter;
 @Setter
 public class UpdateResponse {
   private Long id;
-  private String message;
   private CarDTO carDTO;
+  private String message;
 }

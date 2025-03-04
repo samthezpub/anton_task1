@@ -10,6 +10,6 @@ import lombok.Setter;
 @NoArgsConstructor
 public class CreateResponse {
   private Long id;
-  private String message;
   private UserDTO user;
+  private String message;
 }

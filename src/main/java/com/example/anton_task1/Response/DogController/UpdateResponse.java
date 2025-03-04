@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class UpdateResponse {
-    private Long id;
-    private String message;
-    private DogDTO dogDTO;
+  private Long id;
+  private String message;
+  private DogDTO dogDTO;
 }

@@ -10,6 +10,6 @@ import lombok.Setter;
 @Builder
 @AllArgsConstructor
 public class DeleteProjectResponce {
-    private String message;
-    private Long id;
+  private String message;
+  private Long id;
 }

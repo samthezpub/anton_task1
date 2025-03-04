@@ -6,6 +6,7 @@ import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
 public interface DogMapper {
-    DogEntity dtoToEntity(DogDTO dto);
-    DogDTO EntityToDto(DogEntity dogEntity);
+  DogEntity dtoToEntity(DogDTO dto);
+
+  DogDTO EntityToDto(DogEntity dogEntity);
 }

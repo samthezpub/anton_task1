@@ -7,6 +7,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class CreateCarForUserRequest {
-    private Long userId;
-    private CarDTO carDTO;
+  private CarDTO carDTO;
+  private Long userId;
 }

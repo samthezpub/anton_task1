@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class FindResponse {
-    private Long id;
-    private String message;
-    private DogDTO dog;
+  private Long id;
+  private String message;
+  private DogDTO dog;
 }

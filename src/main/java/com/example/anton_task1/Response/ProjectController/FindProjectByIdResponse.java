@@ -11,6 +11,6 @@ import lombok.Setter;
 @Builder
 @AllArgsConstructor
 public class FindProjectByIdResponse {
-    private String message;
-    private ProjectDTO project;
+  private String message;
+  private ProjectDTO project;
 }

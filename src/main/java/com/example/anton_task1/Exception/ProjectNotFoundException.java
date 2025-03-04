@@ -1,8 +1,8 @@
 package com.example.anton_task1.Exception;
 
 public class ProjectNotFoundException extends RuntimeException {
-  private final Integer code = 404;
   private Long id;
+  private final Integer code = 404;
 
   public ProjectNotFoundException(String message) {
     super(message);

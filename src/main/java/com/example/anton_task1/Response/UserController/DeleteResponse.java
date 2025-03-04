@@ -8,6 +8,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class DeleteResponse {
-  private Long deleted_id;
   private String message;
+  private Long deleted_id;
 }

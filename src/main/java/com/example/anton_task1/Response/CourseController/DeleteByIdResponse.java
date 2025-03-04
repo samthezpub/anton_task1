@@ -10,6 +10,6 @@ import lombok.Setter;
 @Builder
 @AllArgsConstructor
 public class DeleteByIdResponse {
-    private Long id;
-    private String message;
+  private Long id;
+  private String message;
 }
