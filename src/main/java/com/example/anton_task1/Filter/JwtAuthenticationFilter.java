@@ -3,6 +3,7 @@ package com.example.anton_task1.Filter;
 import com.example.anton_task1.Config.MyUserPrincipal;
 import com.example.anton_task1.Service.JwtService;
 import com.example.anton_task1.Service.MyUserDetailsService;
+import io.jsonwebtoken.security.SignatureException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -29,29 +30,39 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     final String token;
     final String username;
 
-    if (authHeader == null) {
-      filterChain.doFilter(request, response);
-      return;
-    }
+    try {
 
-    token = authHeader.substring(7);
-    username = jwtService.extractUsername(token);
-
-    if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-      MyUserPrincipal userDetails =
-          (MyUserPrincipal) this.userDetailsService.loadUserByUsername(username);
-      if (jwtService.isTokenValid(token, userDetails)) {
-        UsernamePasswordAuthenticationToken authToken =
-            new UsernamePasswordAuthenticationToken(
-                userDetails, null, userDetails.getAuthorities());
-
-        authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
-        System.out.println(authToken);
-
-        SecurityContextHolder.getContext().setAuthentication(authToken);
-        System.out.println(SecurityContextHolder.getContext());
+      if (authHeader == null) {
+        filterChain.doFilter(request, response);
+        return;
       }
+
+      token = authHeader.substring(7);
+      username = jwtService.extractUsername(token);
+
+      if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+        MyUserPrincipal userDetails =
+            (MyUserPrincipal) this.userDetailsService.loadUserByUsername(username);
+
+        if (jwtService.isTokenValid(token, userDetails)) {
+          UsernamePasswordAuthenticationToken authToken =
+              new UsernamePasswordAuthenticationToken(
+                  userDetails, null, userDetails.getAuthorities());
+
+          authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+
+          System.out.println(authToken);
+
+          SecurityContextHolder.getContext().setAuthentication(authToken);
+          System.out.println(SecurityContextHolder.getContext());
+        }
+      }
+
+    } catch (SignatureException e) {
+      response.setContentType("application/json");
+      response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+      response.getWriter().write("{\"code\": 400, \"message\": \"Invalid JWT signature\"}");
+      return;
     }
     filterChain.doFilter(request, response);
   }
