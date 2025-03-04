@@ -39,6 +39,56 @@
 
 
         </createTable>
+
+        <createTable tableName="course_entity">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true" />
+            </column>
+            <column name="name" type="varchar">
+                <constraints nullable="false" />
+            </column>
+            <column name="description" type="text">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+
+        <createSequence cacheSize="5"
+                        catalogName="course_entity_seq"
+                        cycle="false"
+                        dataType="bigint"
+                        incrementBy="50"
+                        maxValue="99999"
+                        minValue="10"
+                        schemaName="public"
+                        sequenceName="course_entity_seq"
+                        startValue="50"/>
+
+
+
+        <createTable tableName="users_courses" primaryKeyColumns="user_id,course_id">
+            <column name="user_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="course_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+
+        <addForeignKeyConstraint baseColumnNames="user_id"
+                                 baseTableName="users_courses"
+                                 constraintName="fk_user_courses_user"
+                                 referencedColumnNames="id"
+                                 referencedTableName="users"
+                                 onDelete="CASCADE"/>
+
+        <addForeignKeyConstraint baseColumnNames="course_id"
+                                 baseTableName="users_courses"
+                                 constraintName="fk_user_courses_course"
+                                 referencedColumnNames="id"
+                                 referencedTableName="course_entity"
+                                 onDelete="CASCADE"/>
+
         <addForeignKeyConstraint baseColumnNames="dog_id"
                                  baseTableName="users"
                                  constraintName="fk8bh1un7d081owj6ne1rkyeiie"

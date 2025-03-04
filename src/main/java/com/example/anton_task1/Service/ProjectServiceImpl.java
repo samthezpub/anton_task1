@@ -19,7 +19,11 @@ public class ProjectServiceImpl implements ProjectService {
   private final UserRepository userRepository;
   private final UserMapper userMapper;
 
-  public ProjectServiceImpl(ProjectRepository projectRepository, ProjectMapper projectMapper, UserRepository userRepository, UserMapper userMapper) {
+  public ProjectServiceImpl(
+      ProjectRepository projectRepository,
+      ProjectMapper projectMapper,
+      UserRepository userRepository,
+      UserMapper userMapper) {
     this.projectRepository = projectRepository;
     this.projectMapper = projectMapper;
     this.userRepository = userRepository;
@@ -38,10 +42,11 @@ public class ProjectServiceImpl implements ProjectService {
 
   @Override
   public ProjectDTO findProjectById(Long id) throws ProjectNotFoundException {
-    ProjectDTO foundDto = projectMapper.toDTO(
+    ProjectDTO foundDto =
+        projectMapper.toDTO(
             projectRepository
-                    .findById(id)
-                    .orElseThrow(() -> new ProjectNotFoundException("Project Not Found", id)));
+                .findById(id)
+                .orElseThrow(() -> new ProjectNotFoundException("Project Not Found", id)));
 
     return foundDto;
   }
@@ -49,9 +54,11 @@ public class ProjectServiceImpl implements ProjectService {
   @Override
   public ProjectDTO updateProject(ProjectDTO projectDTO) throws ProjectNotFoundException {
 
-    ProjectEntity projectEntity = projectRepository
+    ProjectEntity projectEntity =
+        projectRepository
             .findById(projectDTO.getId())
-            .orElseThrow(() -> new ProjectNotFoundException("Project Not Found", projectDTO.getId()));
+            .orElseThrow(
+                () -> new ProjectNotFoundException("Project Not Found", projectDTO.getId()));
 
     ProjectEntity entity = projectMapper.toEntity(projectDTO);
 
@@ -64,9 +71,16 @@ public class ProjectServiceImpl implements ProjectService {
   }
 
   @Override
-  public UserDTO addUserToProject(Long projectId, Long userId) throws UserNotFoundException, ProjectNotFoundException {
-    UserEntity userEntity = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("User Not Found", userId));
-    ProjectEntity projectEntity = projectRepository.findById(projectId).orElseThrow(() -> new ProjectNotFoundException("Project Not Found", projectId));
+  public UserDTO addUserToProject(Long projectId, Long userId)
+      throws UserNotFoundException, ProjectNotFoundException {
+    UserEntity userEntity =
+        userRepository
+            .findById(userId)
+            .orElseThrow(() -> new UserNotFoundException("User Not Found", userId));
+    ProjectEntity projectEntity =
+        projectRepository
+            .findById(projectId)
+            .orElseThrow(() -> new ProjectNotFoundException("Project Not Found", projectId));
 
     userEntity.getProjects().add(projectEntity);
     UserEntity updatedUser = userRepository.save(userEntity);
@@ -76,9 +90,16 @@ public class ProjectServiceImpl implements ProjectService {
   }
 
   @Override
-  public UserDTO removeUserFromProject(Long projectId, Long userId) throws UserNotFoundException, ProjectNotFoundException {
-    UserEntity userEntity = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("User Not Found", userId));
-    ProjectEntity projectEntity = projectRepository.findById(projectId).orElseThrow(() -> new ProjectNotFoundException("Project Not Found", projectId));
+  public UserDTO removeUserFromProject(Long projectId, Long userId)
+      throws UserNotFoundException, ProjectNotFoundException {
+    UserEntity userEntity =
+        userRepository
+            .findById(userId)
+            .orElseThrow(() -> new UserNotFoundException("User Not Found", userId));
+    ProjectEntity projectEntity =
+        projectRepository
+            .findById(projectId)
+            .orElseThrow(() -> new ProjectNotFoundException("Project Not Found", projectId));
 
     userEntity.getProjects().remove(projectEntity);
     UserEntity updatedUser = userRepository.save(userEntity);
@@ -89,8 +110,6 @@ public class ProjectServiceImpl implements ProjectService {
 
   @Override
   public void deleteProject(Long id) {
-    ProjectEntity projectEntity = projectRepository.findById(id).orElseThrow(() -> new ProjectNotFoundException("Project Not Found", id));
-
-
+    projectRepository.deleteById(id);
   }
 }

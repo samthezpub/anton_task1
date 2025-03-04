@@ -45,6 +45,15 @@ public class UserEntity {
       inverseJoinColumns = @JoinColumn(name = "project_id"))
   private List<ProjectEntity> projects;
 
+  @ManyToMany(
+      cascade = {CascadeType.PERSIST, CascadeType.MERGE},
+      fetch = FetchType.LAZY)
+  @JoinTable(
+      name = "users_courses",
+      joinColumns = @JoinColumn(name = "user_id"),
+      inverseJoinColumns = @JoinColumn(name = "course_id"))
+  private List<CourseEntity> courses;
+
   @Override
   public String toString() {
     return "UserEntity{"

@@ -60,7 +60,11 @@ public class SpringSecurity {
                         "/users/update",
                         "/users/find/*",
                         "/users/deleteAll",
-                        "/dogs/find/*")
+                        "/dogs/find/*",
+                        "/course/delete/*",
+                        "/course/update",
+                        "/course/addUser",
+                        "/course/deleteUser")
                     .hasAnyRole("ADMIN")
                     .requestMatchers(
                         "/users/hello",
@@ -68,7 +72,11 @@ public class SpringSecurity {
                         "/users/createDog",
                         "/dogs/create",
                         "/dogs/update",
-                        "/dogs/delete/*")
+                        "/dogs/delete/*",
+                        "/course/create",
+                        "/course/findByUser/*",
+                        "/course",
+                        "/course/*")
                     .hasAnyRole("USER", "ADMIN")
                     .requestMatchers("/auth/register", "/auth/login", "/error")
                     .permitAll()

@@ -17,4 +17,5 @@ public class UserDTO {
 
   private DogDTO dog;
   private List<CarDTO> cars;
+  private List<CourseDTO> courses;
 }
