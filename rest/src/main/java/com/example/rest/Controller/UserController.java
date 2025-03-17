@@ -1,5 +1,6 @@
 package com.example.rest.Controller;
 
+import com.example.buisness.DTO.UserAndCatDTO;
 import com.example.buisness.DTO.UserDTO;
 import com.example.buisness.Exception.UserExistsException;
 import com.example.buisness.Exception.UserNotFoundException;
@@ -10,18 +11,24 @@ import com.example.buisness.Response.UserController.DeleteResponse;
 import com.example.buisness.Response.UserController.FindResponse;
 import com.example.buisness.Response.UserController.UpdateResponse;
 import com.example.buisness.Service.UserServiceImpl;
+import com.example.rest.Client.CatClient;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
+
 @RestController
 @RequestMapping("/users")
 public class UserController {
   private final UserServiceImpl userService;
+  private final CatClient catClient;
 
-  public UserController(UserServiceImpl userService) {
+  public UserController(UserServiceImpl userService, CatClient catClient) {
     this.userService = userService;
+    this.catClient = catClient;
   }
 
   @GetMapping("/hello")
@@ -48,15 +55,15 @@ public class UserController {
 
   @GetMapping("/find/{id}")
   public ResponseEntity<FindResponse> getUserById(@PathVariable Long id)
-      throws UserNotFoundException {
+      throws UserNotFoundException, ExecutionException, InterruptedException, TimeoutException {
     HttpHeaders headers = new HttpHeaders();
 
-    UserDTO userDTO = userService.findUserById(id);
+    UserAndCatDTO userById = userService.findUserById(id);
 
     FindResponse findResponse = new FindResponse();
     findResponse.setId(id);
     findResponse.setMessage("Success founded user");
-    findResponse.setUser(userDTO);
+    findResponse.setDto(userById);
 
     ResponseEntity<FindResponse> response =
         new ResponseEntity<>(findResponse, headers, HttpStatus.OK);
@@ -83,7 +90,8 @@ public class UserController {
   }
 
   @PostMapping("/createCar")
-  public ResponseEntity<UpdateResponse> createCarForUser(@RequestBody CreateCarForUserRequest request) throws UserNotFoundException {
+  public ResponseEntity<UpdateResponse> createCarForUser(
+      @RequestBody CreateCarForUserRequest request) throws UserNotFoundException {
     HttpHeaders headers = new HttpHeaders();
 
     UserDTO updatedDTO = userService.createCarForUser(request);
@@ -93,12 +101,14 @@ public class UserController {
     updateResponse.setMessage("Car created successfully");
     updateResponse.setUser(updatedDTO);
 
-    ResponseEntity<UpdateResponse> response = new ResponseEntity<>(updateResponse, headers, HttpStatus.OK);
+    ResponseEntity<UpdateResponse> response =
+        new ResponseEntity<>(updateResponse, headers, HttpStatus.OK);
     return response;
   }
 
   @PostMapping("/createDog")
-  public ResponseEntity<UpdateResponse> createDogForUser(@RequestBody CreateDogForUserRequest request) throws UserNotFoundException {
+  public ResponseEntity<UpdateResponse> createDogForUser(
+      @RequestBody CreateDogForUserRequest request) throws UserNotFoundException {
     HttpHeaders headers = new HttpHeaders();
 
     UserDTO updatedDTO = userService.createDogForUser(request);
@@ -108,23 +118,24 @@ public class UserController {
     updateResponse.setMessage("Dog created successfully");
     updateResponse.setUser(updatedDTO);
 
-    ResponseEntity<UpdateResponse> response = new ResponseEntity<>(updateResponse, headers, HttpStatus.OK);
+    ResponseEntity<UpdateResponse> response =
+        new ResponseEntity<>(updateResponse, headers, HttpStatus.OK);
     return response;
   }
 
   @DeleteMapping("/delete/{id}")
-  public ResponseEntity<DeleteResponse> deleteUserById(@PathVariable Long id) {
+  public ResponseEntity<DeleteResponse> deleteUserById(@PathVariable Long id)
+      throws UserNotFoundException, ExecutionException, InterruptedException, TimeoutException {
+
+    catClient.deleteCatByName(userService.findUserById(id).getUser().getUsername());
     userService.deleteUser(id);
 
     DeleteResponse deleteResponse = new DeleteResponse();
     deleteResponse.setDeleted_id(id);
     deleteResponse.setMessage("User is deleted");
-
     HttpHeaders headers = new HttpHeaders();
-
     ResponseEntity<DeleteResponse> response =
         new ResponseEntity<>(deleteResponse, headers, HttpStatus.OK);
-
     return response;
   }
 

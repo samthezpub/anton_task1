@@ -121,7 +121,6 @@ public class CourseServiceImpl implements CourseService {
             .orElseThrow(
                 () ->
                     new CourseNotFound("Course not found!", addUserToCourseRequest.getCourseId()));
-
     UserEntity userEntity =
         userRepository
             .findById(addUserToCourseRequest.getUserId())
@@ -131,11 +130,8 @@ public class CourseServiceImpl implements CourseService {
                         "User not found", addUserToCourseRequest.getUserId()));
 
     userEntity.getCourses().add(courseEntity);
-
     userRepository.save(userEntity);
-
     log.info("К курсу успешно добавлен пользователь");
-
     return AddUserToCourseResponse.builder()
         .message("User successfully added to course")
         .course(courseMapper.toDTO(courseEntity))

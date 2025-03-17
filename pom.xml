@@ -16,6 +16,7 @@
         <module>db</module>
         <module>buisness</module>
         <module>rest</module>
+        <module>kafka</module>
     </modules>
     <description>Demo project for Spring Boot</description>
     <url/>
