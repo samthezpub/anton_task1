@@ -5,6 +5,7 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -16,6 +17,11 @@ import org.springframework.stereotype.Service;
 public class KafkaSender {
   private final KafkaTemplate<String, String> kafkaTemplate;
   private final Map<String, CompletableFuture<String>> pendingRequests = new ConcurrentHashMap<>();
+
+  public KafkaSender(KafkaTemplate<String, String> kafkaTemplate) {
+    this.kafkaTemplate = kafkaTemplate;
+  }
+
   public void sendLog(String message) {
     kafkaTemplate.send("logging", "generalApp", message);
   }
@@ -35,9 +41,5 @@ public class KafkaSender {
     if (future != null) {
       future.complete(response);
     }
-  }
-
-  public KafkaSender(KafkaTemplate<String, String> kafkaTemplate) {
-    this.kafkaTemplate = kafkaTemplate;
   }
 }
