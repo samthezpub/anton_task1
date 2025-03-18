@@ -12,6 +12,7 @@ import com.example.buisness.Response.UserController.FindResponse;
 import com.example.buisness.Response.UserController.UpdateResponse;
 import com.example.buisness.Service.UserServiceImpl;
 import com.example.rest.Client.CatClient;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -55,7 +56,7 @@ public class UserController {
 
   @GetMapping("/find/{id}")
   public ResponseEntity<FindResponse> getUserById(@PathVariable Long id)
-      throws UserNotFoundException, ExecutionException, InterruptedException, TimeoutException {
+      throws UserNotFoundException, ExecutionException, InterruptedException, TimeoutException, JsonProcessingException {
     HttpHeaders headers = new HttpHeaders();
 
     UserAndCatDTO userById = userService.findUserById(id);
@@ -125,7 +126,7 @@ public class UserController {
 
   @DeleteMapping("/delete/{id}")
   public ResponseEntity<DeleteResponse> deleteUserById(@PathVariable Long id)
-      throws UserNotFoundException, ExecutionException, InterruptedException, TimeoutException {
+      throws UserNotFoundException, ExecutionException, InterruptedException, TimeoutException, JsonProcessingException {
 
     catClient.deleteCatByName(userService.findUserById(id).getUser().getUsername());
     userService.deleteUser(id);

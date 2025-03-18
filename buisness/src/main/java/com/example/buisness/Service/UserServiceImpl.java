@@ -19,6 +19,8 @@ import java.util.concurrent.TimeoutException;
 
 import com.example.buisness.Request.CreateDogForUserRequest;
 import com.example.kafka.KafkaSender;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -73,7 +75,7 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public UserAndCatDTO findUserById(Long id)
-      throws UserNotFoundException, ExecutionException, InterruptedException, TimeoutException {
+      throws UserNotFoundException, ExecutionException, InterruptedException, TimeoutException, JsonProcessingException {
     UserEntity userEntity =
         userRepository
             .findById(id)
@@ -81,10 +83,11 @@ public class UserServiceImpl implements UserService {
     kafkaSender.sendLog("User found by id " + id);
     CompletableFuture<String> stringCompletableFuture =
         kafkaSender.sendFindUserCat(userEntity.getUsername());
-    String catDTOString = stringCompletableFuture.get(9999, TimeUnit.SECONDS);
-    log.info(catDTOString);
+    ObjectMapper objectMapper = new ObjectMapper();
+    CatDTO catDTO = objectMapper.readValue(stringCompletableFuture.get(9999, TimeUnit.SECONDS), CatDTO.class);
+    log.info(catDTO.toString());
 
-    return new UserAndCatDTO(userMapper.toDTO(userEntity), new CatDTO(2, "Вася"));
+    return new UserAndCatDTO(userMapper.toDTO(userEntity), catDTO);
   }
 
   @Override

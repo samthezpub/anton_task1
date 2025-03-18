@@ -1,15 +1,14 @@
 package com.example.buisness.DTO;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class CatDTO {
+  private Long id;
   private Integer age;
   private String name;
 }

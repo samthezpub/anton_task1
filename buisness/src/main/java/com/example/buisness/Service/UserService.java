@@ -6,6 +6,7 @@ import com.example.buisness.Exception.UserExistsException;
 import com.example.buisness.Exception.UserNotFoundException;
 import com.example.buisness.Request.CreateCarForUserRequest;
 import com.example.buisness.Request.CreateDogForUserRequest;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
@@ -13,7 +14,7 @@ import java.util.concurrent.TimeoutException;
 public interface UserService {
   UserDTO createUser(UserDTO user) throws UserExistsException;
 
-  UserAndCatDTO findUserById(Long id) throws UserNotFoundException, ExecutionException, InterruptedException, TimeoutException;
+  UserAndCatDTO findUserById(Long id) throws UserNotFoundException, ExecutionException, InterruptedException, TimeoutException, JsonProcessingException;
 
   UserDTO updateUser(UserDTO user) throws UserNotFoundException;
 
